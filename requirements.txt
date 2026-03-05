@@ -8,3 +8,8 @@ mlflow
 evidently
 fastapi
 uvicorn
+xgboost
+streamlit
+scikit-learn
+matplotlib
+pandas
