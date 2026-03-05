@@ -23,7 +23,7 @@ def fetch_data_by_date(date, commodity_id=1):
         "isPasokan": 1,
         "jenis": 1,
         "periode": 1,
-        "provId": 0
+        "provId": 01. 
     }
 
     response = requests.get(BASE_URL, params=params, headers=HEADERS)
