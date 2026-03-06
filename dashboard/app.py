@@ -16,6 +16,18 @@ st.set_page_config(page_title="Early Warning Harga Beras")
 
 st.title("Sistem Early Warning Harga Beras")
 
+st.sidebar.header("Filter Data")
+
+komoditas = st.sidebar.selectbox(
+    "Komoditas",
+    ["Beras"]
+)
+
+provinsi = st.sidebar.selectbox(
+    "Provinsi",
+    ["Jawa Timur"]
+)
+
 hist = pd.read_csv("data/processed/harga_features.csv")
 forecast = pd.read_csv("data/processed/forecast_result.csv")
 
@@ -49,6 +61,31 @@ with col2:
         delta=f"{prediksi_terakhir-harga_sekarang:.0f}"
     )
 
+st.subheader("Harga Historis")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    tanggal_pilih = st.date_input(
+        "Pilih tanggal",
+        value=hist["Tanggal"].max()
+    )
+
+with col2:
+
+    harga_historis = hist.loc[
+        hist["Tanggal"] == pd.to_datetime(tanggal_pilih),
+        "Nilai"
+    ]
+
+    if not harga_historis.empty:
+        st.metric(
+            "Harga pada tanggal tersebut",
+            f"Rp {harga_historis.values[0]:,.0f}"
+        )
+    else:
+        st.write("Data tidak tersedia")
+
 st.subheader("Indikator Risiko")
 
 if psi > 0.2:
@@ -75,29 +112,26 @@ plot_df = pd.concat([
 
 ])
 
-plt.figure(figsize=(10,5))
+st.subheader("Tren Harga Beras")
+
+plt.figure(figsize=(12,5))
 
 plt.plot(
     hist["Tanggal"],
     hist["Nilai"],
-    label="Actual Price"
+    label="Harga Historis"
 )
 
 plt.plot(
     forecast["Tanggal"],
     forecast["Nilai"],
     color="red",
-    label="Forecast Price"
+    label="Prediksi Harga"
 )
+
+plt.xlabel("Tanggal")
+plt.ylabel("Harga")
 
 plt.legend()
 
-plt.xlabel("Tanggal")
-
-plt.ylabel("Harga")
-
 st.pyplot(plt)
-
-st.subheader("Data Forecast")
-
-st.dataframe(forecast)
