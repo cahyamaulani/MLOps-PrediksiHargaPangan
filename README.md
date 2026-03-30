@@ -1,10 +1,6 @@
 # Sistem Early Warning dan Prediksi Lonjakan Harga Pangan di Jawa Timur
 
-Proyek ini merupakan implementasi sistem **Early Warning dan Prediksi Lonjakan Harga Pangan di Jawa Timur** yang bertujuan untuk memantau serta memprediksi perubahan harga komoditas pangan. Sistem monitoring fluktuasi harga pangan yang tersedia saat ini umumnya hanya menampilkan data historis tanpa kemampuan prediktif, sehingga sulit untuk mengantisipasi lonjakan harga secara lebih awal.
-
-Untuk mengatasi permasalahan tersebut, proyek ini mengembangkan sistem prediksi harga berbasis **Machine Learning Time-Series Forecasting** menggunakan model regresi. Model digunakan untuk memprediksi harga beras hingga **7 hari ke depan** berdasarkan data historis harga. Selain melakukan prediksi harga, sistem juga dilengkapi dengan mekanisme **early warning** untuk mendeteksi potensi kenaikan harga secara lebih dini.
-
-Sistem ini dirancang menggunakan pendekatan **Machine Learning Operations (MLOps)** sehingga proses pengolahan data, pelatihan model, prediksi, serta monitoring model dapat berjalan secara terstruktur dan berkelanjutan.
+Proyek ini merupakan implementasi sistem **Early Warning dan Prediksi Lonjakan Harga Pangan di Jawa Timur** yang bertujuan untuk memantau serta memprediksi perubahan harga komoditas pangan. Sistem monitoring fluktuasi harga pangan yang tersedia saat ini umumnya hanya menampilkan data historis tanpa kemampuan prediktif, sehingga sulit untuk mengantisipasi lonjakan harga secara lebih awal. Proyek ini mengembangkan sistem prediksi harga berbasis **Machine Learning Time-Series Forecasting** menggunakan model regresi. Model digunakan untuk memprediksi harga beras hingga **7 hari ke depan** berdasarkan data historis harga. Selain melakukan prediksi harga, sistem juga dilengkapi dengan mekanisme **early warning** untuk mendeteksi potensi kenaikan harga secara lebih dini.
 
 ---
 
@@ -48,6 +44,7 @@ Dashboard Monitoring & Early Warning
 ---
 
 ## Struktur Direktori Proyek
+Struktur akan dinamis mengikuti progress projek
 ```
 MLOps-PrediksiHargaPangan
 │
@@ -56,9 +53,7 @@ MLOps-PrediksiHargaPangan
 │ └── processed
 │
 ├── src
-│ ├── data
-│ │ └── ingestion.py
-│ │
+│ ├── ingest_data.py
 │ ├── features
 │ │ ├── data_cleaning.py
 │ │ └── feature_engineering.py
@@ -66,21 +61,110 @@ MLOps-PrediksiHargaPangan
 │ ├── models
 │ │ ├── train_xgboost.py
 │ │ └── forecast.py
-│ │
-│ └── monitoring
-│ └── drift_detection.py
-│
-├── dashboard
-│ └── app.py
-│
-├── models
-│ └── xgboost_model.pkl
-│
-├── notebooks
-│ ├── 01_eda.ipynb
-│ ├── 02_feature_engineering.ipynb
-│ └── 03_model_pipeline.ipynb
-│
 ├── requirements.txt
 └── README.md
 ```
+
+# LK-04: Data Acquisition & Preprocessing Pipeline
+
+Pipeline mencakup dua tahap utama:
+
+* **Data Ingestion (Acquisition)**
+* **Data Preprocessing (Cleaning)**
+
+---
+
+## Instalasi Dependencies
+
+Pastikan Python sudah terinstall, lalu jalankan:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Ingestion
+
+Script ingestion digunakan untuk mengambil data harga pangan dari API selama **2 tahun terakhir** untuk seluruh komoditas.
+
+Jalankan:
+
+```bash
+python src/ingest_data.py
+```
+output akan tersimpan di: 
+```
+data/raw/
+```
+denganormat file:
+
+```
+harga_pangan_ALL_YYYYMMDD_HHMMSS.csv
+```
+
+---
+
+## Preprocessing
+
+Script preprocessing digunakan untuk membersihkan dan menyiapkan data sebelum digunakan untuk modeling.
+
+Jalankan:
+
+```bash
+python src/preprocess.py
+```
+output akan tersimpan di: 
+```
+data/processed/harga_clean.csv
+```
+
+---
+
+## Struktur Data Output
+
+### 1. Raw Data (`data/raw/`)
+
+Berisi data mentah hasil ingestion:
+
+* Semua komoditas
+* Rentang waktu 2 tahun
+* Format CSV dengan timestamp
+
+---
+
+### 2. Processed Data (`data/processed/`)
+
+Berisi data yang sudah dibersihkan dan siap digunakan.
+
+Kolom yang digunakan:
+
+* `tanggal` → tanggal data (datetime)
+* `Provinsi` → lokasi
+* `commodity_id` → ID komoditas
+* `Nilai` → harga
+* `NilaiDiff` → perubahan harga
+
+---
+
+## Pipeline Overview
+
+1. **Ingestion**
+
+   * Mengambil data dari API per tanggal
+   * Menggabungkan semua komoditas
+   * Menyimpan ke CSV
+
+2. **Preprocessing**
+
+   * Menghapus duplikasi
+   * Handling missing values
+   * Konversi tipe data
+   * Sorting data time-series
+
+---
+
+## 👩‍💻 Author
+
+Dwi Cahya Maulani
+
