@@ -13,3 +13,7 @@ streamlit
 scikit-learn
 matplotlib
 pandas
+requests
+beautifulsoup4
+pandas
+nltk
