@@ -1,0 +1,5 @@
+outs:
+- md5: 1157161fc528708857d6a20728b45e7c
+  size: 791179
+  hash: md5
+  path: harga_pangan.csv
