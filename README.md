@@ -43,28 +43,6 @@ Dashboard Monitoring & Early Warning
 ```
 ---
 
-## Struktur Direktori Proyek
-Struktur akan dinamis mengikuti progress projek
-```
-MLOps-PrediksiHargaPangan
-│
-├── data
-│ ├── raw
-│ └── processed
-│
-├── src
-│ ├── ingest_data.py
-│ ├── features
-│ │ ├── data_cleaning.py
-│ │ └── feature_engineering.py
-│ │
-│ ├── models
-│ │ ├── train_xgboost.py
-│ │ └── forecast.py
-├── requirements.txt
-└── README.md
-```
-
 # LK-04: Data Acquisition & Preprocessing Pipeline
 
 Pipeline mencakup dua tahap utama:
@@ -163,6 +141,32 @@ Kolom yang digunakan:
    * Sorting data time-series
 
 ---
+
+---
+
+# LK-05: Data Versioning & Data Lineage (DVC)
+
+Pada tahap ini, proyek mengimplementasikan **Data Version Control (DVC)** untuk mengelola dataset secara terstruktur dan mendukung prinsip **MLOps**, khususnya dalam hal versioning dan reproducibility.
+
+---
+
+## Tujuan Implementasi DVC
+
+- Mengelola dataset secara terpisah dari Git (menghindari penyimpanan file besar di repository)
+- Melacak perubahan dataset dari waktu ke waktu (data versioning)
+- Mendukung proses **continual learning** dengan penambahan data baru
+- Menyediakan transparansi silsilah data (data lineage)
+
+---
+
+## Konsep yang Digunakan
+
+Dalam implementasi ini, penyimpanan data dibagi menjadi dua bagian:
+- Git Repository → menyimpan metadata (.dvc)
+- MinIO Storage → menyimpan data asli (CSV) - external storage
+
+## Ringkasan Workflow
+Ingestion → Update Dataset → dvc add → Git Commit → dvc push
 
 ## 👩‍💻 Author
 
