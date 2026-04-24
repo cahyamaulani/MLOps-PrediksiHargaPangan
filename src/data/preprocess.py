@@ -1,6 +1,5 @@
 import glob
 import os
-
 import pandas as pd
 
 
@@ -23,13 +22,6 @@ OUTPUT_PATH = os.path.join(
 # ==============================
 
 def load_latest_data():
-    """
-    Mengambil file CSV terbaru dari folder data/raw.
-
-    Returns:
-        pd.DataFrame: dataset mentah terbaru
-    """
-
     print("Loading latest raw data...")
 
     files = glob.glob(os.path.join(RAW_DIR, "*.csv"))
@@ -53,13 +45,6 @@ def load_latest_data():
 # ==============================
 
 def clean_data(dataframe):
-    """
-    Membersihkan dataset:
-    - Menghapus duplikasi
-    - Menangani missing value
-    - Mengonversi tipe data
-    """
-
     print("\nCleaning data...")
 
     # hapus duplikasi
@@ -70,15 +55,41 @@ def clean_data(dataframe):
 
     # konversi tanggal ke datetime
     if "tanggal" in dataframe.columns:
-        dataframe["tanggal"] = pd.to_datetime(
-            dataframe["tanggal"]
-        )
+        dataframe["tanggal"] = pd.to_datetime(dataframe["tanggal"])
 
     # isi missing value
     if "NilaiDiff" in dataframe.columns:
         dataframe["NilaiDiff"] = dataframe["NilaiDiff"].fillna(0)
 
-    # hapus nilai kosong penting
+    # =========================
+    # KONVERSI HARGA KE NUMERIK
+    # =========================
+
+    # kolom Nilai
+    if "Nilai" in dataframe.columns:
+        dataframe["Nilai"] = (
+            dataframe["Nilai"]
+            .astype(str)
+            .str.replace("Rp", "", regex=False)
+            .str.replace(".", "", regex=False)
+            .str.replace(",", "", regex=False)
+        )
+
+        dataframe["Nilai"] = pd.to_numeric(dataframe["Nilai"], errors="coerce")
+
+    # kolom NilaiDiff
+    if "NilaiDiff" in dataframe.columns:
+        dataframe["NilaiDiff"] = (
+            dataframe["NilaiDiff"]
+            .astype(str)
+            .str.replace("Rp", "", regex=False)
+            .str.replace(".", "", regex=False)
+            .str.replace(",", "", regex=False)
+        )
+
+        dataframe["NilaiDiff"] = pd.to_numeric(dataframe["NilaiDiff"], errors="coerce")
+
+    # hapus data penting yang kosong
     dataframe = dataframe.dropna(subset=["Nilai"])
 
     return dataframe
@@ -89,13 +100,6 @@ def clean_data(dataframe):
 # ==============================
 
 def select_columns(dataframe):
-    """
-    Memilih kolom penting untuk analisis.
-
-    Returns:
-        pd.DataFrame: dataset dengan kolom terpilih
-    """
-
     print("\nSelecting important columns...")
 
     selected_columns = [
@@ -116,10 +120,6 @@ def select_columns(dataframe):
 # ==============================
 
 def sort_data(dataframe):
-    """
-    Mengurutkan data berdasarkan komoditas dan waktu.
-    """
-
     print("\nSorting data...")
 
     dataframe = dataframe.sort_values(
@@ -134,10 +134,6 @@ def sort_data(dataframe):
 # ==============================
 
 def save_data(dataframe):
-    """
-    Menyimpan data hasil preprocessing ke folder processed.
-    """
-
     print("\nSaving processed data...")
 
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
@@ -152,10 +148,6 @@ def save_data(dataframe):
 # ==============================
 
 def run_pipeline():
-    """
-    Menjalankan seluruh pipeline preprocessing.
-    """
-
     dataframe = load_latest_data()
     dataframe = clean_data(dataframe)
     dataframe = select_columns(dataframe)
