@@ -165,8 +165,45 @@ Dalam implementasi ini, penyimpanan data dibagi menjadi dua bagian:
 - Git Repository → menyimpan metadata (.dvc)
 - MinIO Storage → menyimpan data asli (CSV) - external storage
 
-## Ringkasan Workflow
-Ingestion → Update Dataset → dvc add → Git Commit → dvc push
+# 📊 Prediksi Harga Pangan (MLOps Pipeline)
+
+## 🔥 Model Aktif (Production)
+
+Model yang saat ini digunakan untuk inferensi adalah:
+
+- **Nama Model**: harga-pangan-model  
+- **Versi**: v2  
+- **Stage**: Production  
+- **Metrik (MAPE)**: 0.15384811162948608
+
+Model ini dipilih karena memiliki nilai error paling kecil dibandingkan versi lainnya, sehingga memberikan performa prediksi terbaik.
+
+---
+
+## ⚙️ Fitur yang Digunakan
+
+Model menggunakan fitur time-series berikut:
+
+- lag_1 (harga kemarin)
+- lag_7 (harga 7 hari lalu)
+- lag_14 (harga 14 hari lalu)
+- rolling_mean_7
+- rolling_mean_14
+- rolling_std_7
+- trend (perubahan harga harian)
+- year, month, dayofweek
+
+---
+
+## 🚀 Cara Menggunakan Model (Inference)
+
+Model dapat dipanggil langsung dari MLflow Model Registry:
+
+```python
+import mlflow.pyfunc
+
+model = mlflow.pyfunc.load_model("models:/harga-pangan-model/Production")
+```
 
 ## 👩‍💻 Author
 
