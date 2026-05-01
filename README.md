@@ -165,8 +165,6 @@ Dalam implementasi ini, penyimpanan data dibagi menjadi dua bagian:
 - Git Repository → menyimpan metadata (.dvc)
 - MinIO Storage → menyimpan data asli (CSV) - external storage
 
-# 📊 Prediksi Harga Pangan (MLOps Pipeline)
-
 ## 🔥 Model Aktif (Production)
 
 Model yang saat ini digunakan untuk inferensi adalah:
