@@ -1,0 +1,17 @@
+model_name: harga-pangan-model
+version: 2
+stage: Production
+
+parameters:
+  n_estimators = 250 
+  max_depth = 4 
+  learning_rate = 0.08 
+  subsample = 0.7 
+  colsample_bytree = 0.7 
+  min_child_weight = 5 
+
+metrics:
+  MAPE: 0.15384811162948608
+
+data:
+  file: data/processed/harga_features.csv
