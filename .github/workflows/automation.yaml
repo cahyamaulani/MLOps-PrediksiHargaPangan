@@ -38,9 +38,9 @@ jobs:
         pip install pytest dvc
 
     # pull data dari dvc
-    - name: Pull DVC Data
-      run: |
-        dvc pull
+    # - name: Pull DVC Data
+    #   run: |
+    #     dvc pull
 
     # preprocessing
     - name: Run Preprocessing
