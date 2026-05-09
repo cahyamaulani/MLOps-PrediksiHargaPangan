@@ -20,5 +20,6 @@ nltk
 numpy
 pytest
 cloudpickle
+dvc[s3]
 
 
