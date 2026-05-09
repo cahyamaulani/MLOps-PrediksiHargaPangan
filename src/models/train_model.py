@@ -3,6 +3,7 @@ import mlflow
 import mlflow.sklearn
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_absolute_percentage_error
+import os
 
 # LOAD DATA
 df = pd.read_csv("data/processed/harga_features.csv")
@@ -49,6 +50,9 @@ colsample_bytree = 0.7 # colsample_bytree: pakai sebagian fitur → model tidak 
 min_child_weight = 5 # min_child_weight: semakin besar → model lebih sederhana (anti overfit)
 
 # MLFLOW
+# set local MLflow tracking
+mlflow.set_tracking_uri("file:./mlruns")
+
 with mlflow.start_run():
 
     model = XGBRegressor(
