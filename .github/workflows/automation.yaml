@@ -1,0 +1,73 @@
+name: MLOps Automation Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  mlops-pipeline:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # setup python
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+
+    # install dependencies
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+
+    # install pytest & dvc
+    - name: Install Extra Dependencies
+      run: |
+        pip install pytest dvc
+
+    # pull data dari dvc
+    - name: Pull DVC Data
+      run: |
+        dvc pull
+
+    # preprocessing
+    - name: Run Preprocessing
+      run: |
+        python src/data/preprocess.py
+
+    # feature engineering
+    - name: Run Feature Engineering
+      run: |
+        python src/features/feature_engineering.py
+
+    # testing
+    - name: Run Pytest
+      run: |
+        pytest tests/
+
+    # training model
+    - name: Train Model
+      run: |
+        python src/models/train_model.py
+
+     # validate model
+    - name: Validate Model
+      run: |
+        python src/evaluation/validate_model.py
+
+    # register model
+    - name: Register Model
+      run: |
+        python src/registry/register_model.py

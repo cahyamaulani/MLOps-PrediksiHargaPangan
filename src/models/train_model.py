@@ -52,9 +52,29 @@ min_child_weight = 5 # min_child_weight: semakin besar → model lebih sederhana
 with mlflow.start_run():
 
     model = XGBRegressor(
+
+        # jumlah pohon boosting
         n_estimators=n_estimators,
+
+        # kedalaman tree
         max_depth=max_depth,
-        learning_rate=learning_rate
+
+        # kecepatan learning
+        learning_rate=learning_rate,
+
+        # memakai sebagian data training
+        # untuk mengurangi overfitting
+        subsample=subsample,
+
+        # memakai sebagian fitur
+        # agar model lebih general
+        colsample_bytree=colsample_bytree,
+
+        # minimum bobot data di leaf
+        # semakin besar -> model lebih sederhana
+        min_child_weight=min_child_weight,
+
+        random_state=42
     )
 
     model.fit(X_train, y_train)
@@ -68,9 +88,9 @@ with mlflow.start_run():
     mlflow.log_param("n_estimators", n_estimators)
     mlflow.log_param("max_depth", max_depth)
     mlflow.log_param("learning_rate", learning_rate)
-    mlflow.log_param("subsample", learning_rate)
-    mlflow.log_param("colsample_bytree", learning_rate)
-    mlflow.log_param("min_child_weight", learning_rate)
+    mlflow.log_param("subsample", subsample)
+    mlflow.log_param("colsample_bytree", colsample_bytree)
+    mlflow.log_param("min_child_weight", min_child_weight)
     mlflow.log_metric("MAPE", mape)
 
     mlflow.sklearn.log_model(model, "model")
