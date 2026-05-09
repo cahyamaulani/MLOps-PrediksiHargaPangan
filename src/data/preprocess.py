@@ -105,7 +105,7 @@ def select_columns(dataframe):
     selected_columns = [
         "tanggal",
         "Provinsi",
-        "commodity_id",
+        "Komoditas",
         "Nilai",
         "NilaiDiff",
     ]
@@ -123,7 +123,7 @@ def sort_data(dataframe):
     print("\nSorting data...")
 
     dataframe = dataframe.sort_values(
-        by=["commodity_id", "tanggal"]
+        by=["Komoditas", "tanggal"]
     )
 
     return dataframe
