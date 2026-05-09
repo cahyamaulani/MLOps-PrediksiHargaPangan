@@ -100,6 +100,15 @@ with mlflow.start_run():
     mlflow.log_param("min_child_weight", min_child_weight)
     mlflow.log_metric("MAPE", mape)
 
+    import json
+
+    metrics = {
+        "MAPE": float(mape)
+    }
+
+    with open("metrics.json", "w") as f:
+        json.dump(metrics, f)
+
     mlflow.sklearn.log_model(model, "model")
 
     print("MAPE:", mape)
