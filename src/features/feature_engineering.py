@@ -29,14 +29,14 @@ def create_features(df):
     print("Creating time-series features...")
 
     # WAJIB: sort berdasarkan komoditas & waktu
-    df = df.sort_values(["commodity_id", "tanggal"])
+    df = df.sort_values(["Komoditas", "tanggal"])
 
     # LAG FEATURES
     # harga hari sebelumnya
-    df["lag_1"] = df.groupby("commodity_id")["Nilai"].shift(1)
+    df["lag_1"] = df.groupby("Komoditas")["Nilai"].shift(1)
 
     # harga 7 hari lalu
-    df["lag_7"] = df.groupby("commodity_id")["Nilai"].shift(7)
+    df["lag_7"] = df.groupby("Komoditas")["Nilai"].shift(7)
 
     # lag 14 (harga 2 minggu lalu)
     df["lag_14"] = df["Nilai"].shift(14)
@@ -44,7 +44,7 @@ def create_features(df):
     # ROLLING FEATURES
     # rata-rata 7 hari terakhir
     df["rolling_mean_7"] = (
-        df.groupby("commodity_id")["Nilai"]
+        df.groupby("Komoditas")["Nilai"]
         .rolling(7)
         .mean()
         .reset_index(level=0, drop=True)
@@ -55,7 +55,7 @@ def create_features(df):
 
     # standar deviasi (volatilitas)
     df["rolling_std_7"] = (
-        df.groupby("commodity_id")["Nilai"]
+        df.groupby("Komoditas")["Nilai"]
         .rolling(7)
         .std()
         .reset_index(level=0, drop=True)
