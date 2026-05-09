@@ -1,0 +1,23 @@
+artifact_path: /workspaces/MLOps-PrediksiHargaPangan/mlruns/0/models/m-70d9ec1473b14f19ab1a2405c4532ad1/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.10.19
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.2
+    skops_trusted_types: null
+mlflow_version: 3.10.0
+model_id: m-70d9ec1473b14f19ab1a2405c4532ad1
+model_size_bytes: 310193
+model_uuid: m-70d9ec1473b14f19ab1a2405c4532ad1
+prompts: null
+run_id: 3e1ddf5521ed4702aea90ae5a1427f6a
+utc_time_created: '2026-05-01 00:59:32.460816'
