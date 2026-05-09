@@ -51,10 +51,9 @@ min_child_weight = 5 # min_child_weight: semakin besar → model lebih sederhana
 
 # MLFLOW
 # set local MLflow tracking
+# MLFLOW
 mlflow.set_tracking_uri("file:./mlruns")
-
-# setup experiment
-mlflow.set_experiment("Harga-Pangan-Experiment")
+mlflow.set_experiment("Harga Pangan Experiment")
 
 with mlflow.start_run():
 
