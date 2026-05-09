@@ -53,6 +53,9 @@ min_child_weight = 5 # min_child_weight: semakin besar → model lebih sederhana
 # set local MLflow tracking
 mlflow.set_tracking_uri("file:./mlruns")
 
+# setup experiment
+mlflow.set_experiment("Harga-Pangan-Experiment")
+
 with mlflow.start_run():
 
     model = XGBRegressor(
