@@ -203,6 +203,132 @@ import mlflow.pyfunc
 model = mlflow.pyfunc.load_model("models:/harga-pangan-model/Production")
 ```
 
+## Model Serving Lokal
+
+Jalankan model sebagai REST API menggunakan MLflow Models:
+
+```bash
+export MLFLOW_TRACKING_URI=sqlite:///mlflow.db
+```
+
+```bash
+mlflow models serve \
+  -m "models:/harga-pangan-model/Production" \
+  -h 0.0.0.0 \
+  -p 8080 \
+  --env-manager local
+```
+
+Endpoint API:
+
+```text
+http://localhost:8080/invocations
+```
+
+---
+
+## Contoh Request Prediksi
+
+```bash
+curl -X POST http://localhost:8080/invocations \
+  -H "Content-Type: application/json" \
+  -d '{
+    "dataframe_records": [
+      {
+        "lag_1": 12000,
+        "lag_7": 11800,
+        "lag_14": 11750,
+        "rolling_mean_7": 11900,
+        "rolling_mean_14": 11850,
+        "rolling_std_7": 150,
+        "trend": 1,
+        "year": 2026,
+        "month": 5,
+        "dayofweek": 4
+      }
+    ]
+  }'
+```
+
+Contoh output:
+
+```json
+{"predictions":[136425.59375]}
+```
+
+---
+
+## Build Docker Image
+
+Membangun Docker image dari model MLflow:
+
+```bash
+mlflow models build-docker \
+  -m "models:/harga-pangan-model/Production" \
+  -n harga-pangan-model-api
+```
+
+---
+
+## Menjalankan Docker Compose
+
+Jalankan layanan menggunakan Docker Compose:
+
+```bash
+docker compose up -d --scale model-api=3
+```
+
+Cek container yang berjalan:
+
+```bash
+docker compose ps
+```
+
+---
+
+## Horizontal Scaling
+
+Project ini menggunakan simulasi horizontal scaling dengan 3 replika layanan model API:
+
+```text
+model-api-1
+model-api-2
+model-api-3
+```
+
+Nginx digunakan sebagai load balancer untuk mendistribusikan request ke beberapa replika model API.
+
+---
+
+## Endpoint API Docker Compose
+
+Endpoint API setelah Docker Compose berjalan:
+
+```text
+http://localhost:8000/invocations
+```
+
+---
+
+## Menambah Jumlah Replika Secara Dinamis
+
+Menambah replika menjadi 5:
+
+```bash
+docker compose up -d --scale model-api=5
+```
+
+Mengurangi replika menjadi 2:
+
+```bash
+docker compose up -d --scale model-api=2
+```
+---
+
+## Author
+
+Cahya Maulani
+
 ## 👩‍💻 Author
 
 Dwi Cahya Maulani
